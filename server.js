@@ -48,10 +48,6 @@ app.get('/todos/:id',function(req,res)
 		 	res.json(todos[i]);
 		 	break;
 		}
-		else
-		{
-			console.log('not found ' + i);
-		}
 	}
 	res.status(404).send();
 });
