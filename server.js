@@ -15,7 +15,7 @@ var todos = [{
 {
 	id:3,
 	desc: "do nodejs rest apis",
-	completed: false
+	completed: true
 }];
 
 
