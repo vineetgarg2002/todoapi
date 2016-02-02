@@ -4,6 +4,7 @@ var app = express();
 var PORT =  process.env.PORT || 3000;
 var nextTodoId = 1;
 var todos = [];
+var _= require('underscore');
 
 app.use(bodyParser.json());
 
@@ -44,25 +45,37 @@ app.get('/todos',function(req,res)
 app.get('/todos/:id',function(req,res)
 {
 	var todoid;
-	 todoid = parseInt(req.params.id,10);
-	console.log(todoid + ' ' + todos.length);
-	for (var i = 0; i < todos.length; i++) {
-		if(todos[i].id === todoid)
-		{
-		 	
-		 	res.json(todos[i]);
-		 	break;
-		}
+	todoid = parseInt(req.params.id,10);
+	var matched = _.findWhere(todos, {id:todoid});
+	if(matched)
+	{
+		res.json(matched);
 	}
-	res.status(404).send();
+	else
+	{
+		res.status(404).send();
+	}
 });
 
 // post request
 app.post('/todos', function(req,res)
 {
 	var body = req.body;
-	body.id = nextTodoId++;
-	todos.push(body);
-	console.log('desc ' + body.description);
-	res.json(body);
+	body = _.pick(req.body,'description','completed');
+
+	console.log(body);
+
+	if(!_.isBoolean(body.completed) || !_.isString(body.description) 
+		|| body.description.trim().length === 0) 
+	{
+		res.status(404).send();
+	}
+	else
+	{
+		body.id = nextTodoId++;
+		body.description = body.description.trim();
+		todos.push(body);
+		console.log('desc ' + body.description);
+		res.json(body);
+	}
 });
