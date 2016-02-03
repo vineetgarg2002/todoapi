@@ -55,6 +55,14 @@ app.get('/todos',function(req,res)
 		{
 			return res.json({});
 		}
+
+	}
+	if(req.query.hasOwnProperty('q') && req.query.q.length > 0)
+	{
+		filteredTodos = _.filter(filteredTodos, function(obj)
+		{
+			return obj.description.indexOf(req.query.q) > -1;
+		});
 	}
 
 	res.json(filteredTodos);
